@@ -3,52 +3,385 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>Neves Labs</title>
+    <title>Neves Labs, product studio</title>
+    <meta name="description" content="Neves Labs is an independent studio designing, building, and running its own apps and tools." />
+    <link rel="canonical" href="https://www.neveslabs.dev/" />
+    <meta name="theme-color" content="#f5f5f2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c0c0b" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Neves Labs" />
+    <meta property="og:title" content="Neves Labs, product studio" />
+    <meta property="og:description" content="Neves Labs is an independent studio designing, building, and running its own apps and tools." />
+    <meta property="og:url" content="https://www.neveslabs.dev/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Neves Labs, product studio" />
+    <meta name="twitter:description" content="Neves Labs is an independent studio designing, building, and running its own apps and tools." />
+    <link rel="preload" href="/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
     <style>
+      @font-face {
+        font-family: "IBM Plex Sans";
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+        src: url("/fonts/ibm-plex-sans-latin-400-normal.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "IBM Plex Sans";
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+        src: url("/fonts/ibm-plex-sans-latin-600-normal.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "IBM Plex Mono";
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+        src: url("/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2");
+      }
+      /* Metric-matched fallback so the Plex swap doesn't shift layout */
+      @font-face {
+        font-family: "Plex Fallback";
+        src: local("Arial");
+        size-adjust: 100%;
+        ascent-override: 102.5%;
+        descent-override: 27.5%;
+      }
+
       :root {
-        --color-bg: #f4f4f2;
+        --color-bg: #f5f5f2;
+        --color-surface: #ffffff;
         --color-fg: #161614;
         --color-fg-2: #5e5e58;
+        --color-border: #dcdcd6;
+        --color-border-strong: #8a8a83;
         --color-accent: #0f766e;
-        --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+        --color-accent-hover: #115e59;
+        --color-on-accent: #ffffff;
+        --color-accent-subtle: color-mix(in oklab, var(--color-accent) 10%, transparent);
+        --color-ring: var(--color-accent);
+        --color-selection: color-mix(in oklab, var(--color-accent) 22%, transparent);
+
+        --font-sans: "IBM Plex Sans", "Plex Fallback", system-ui, sans-serif;
+        --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+        --text-display: clamp(2.5rem, 1.9rem + 2.6vw, 4rem);
+        --text-2xl: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem);
+        --text-lg: 1.1875rem;
+        --text-base: 1.0625rem;
+        --text-sm: 0.9375rem;
+        --text-label: 0.75rem;
+
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-6: 24px;
+        --space-8: 32px;
+        --space-12: 48px;
+        --space-16: 64px;
+        --space-24: 96px;
+        --space-32: 128px;
+
+        --radius-sm: 6px;
+
+        --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+        --ease-in: cubic-bezier(0.4, 0, 1, 1);
+        --dur-press: 100ms;
+        --dur-hover: 160ms;
+        --dur-exit: 160ms;
+        --dur-enter: 240ms;
+        --dur-reveal: 480ms;
+
+        --gutter: var(--space-6);
+
         color-scheme: light dark;
       }
       @media (prefers-color-scheme: dark) {
         :root {
           --color-bg: #0c0c0b;
+          --color-surface: #151513;
           --color-fg: #ecece8;
           --color-fg-2: #9c9c95;
+          --color-border: #2a2a27;
+          --color-border-strong: #6b6b65;
           --color-accent: #2dd4bf;
+          --color-accent-hover: #5eead4;
+          --color-on-accent: #0c0c0b;
         }
       }
+      @media (min-width: 640px) {
+        :root { --gutter: var(--space-8); }
+      }
+
       * { margin: 0; box-sizing: border-box; }
+      ::selection { background: var(--color-selection); }
+
       body {
         min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 16px;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
         background: var(--color-bg);
         color: var(--color-fg);
         font-family: var(--font-sans);
-        text-align: center;
+        font-size: var(--text-base);
+        line-height: 1.6;
       }
-      h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.01em; }
-      h1::after {
-        content: "";
-        display: block;
+
+      .container {
+        width: min(100% - 2 * var(--gutter), 68rem);
+        margin-inline: auto;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--color-ring);
+        outline-offset: 3px;
+        border-radius: var(--radius-sm);
+      }
+      main:focus { outline: none; }
+
+      /* Skip link */
+      .skip-link {
+        position: absolute;
+        top: var(--space-2);
+        left: var(--space-2);
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: var(--space-3) var(--space-4);
+        background: var(--color-surface);
+        color: var(--color-fg);
+        border-radius: var(--radius-sm);
+        font-size: var(--text-sm);
+        font-weight: 600;
+        line-height: 1.5;
+        text-decoration: none;
+        transform: translateY(-200%);
+        transition: transform var(--dur-exit) var(--ease-in);
+      }
+      .skip-link:focus {
+        transform: none;
+        transition: transform var(--dur-enter) var(--ease-out);
+      }
+
+      /* Header + brand */
+      header {
+        display: flex;
+        align-items: center;
+        min-height: 64px;
+      }
+      header .container { display: flex; align-items: center; }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 44px;
+        color: var(--color-fg);
+        font-size: var(--text-lg);
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: -0.01em;
+        text-decoration: none;
+      }
+      .brand-labs {
+        font-family: var(--font-mono);
+        font-weight: 500;
+        color: var(--color-fg-2);
+      }
+      .mark-diagonal { stroke-dasharray: 1; }
+      @keyframes draw {
+        from { stroke-dashoffset: 1; }
+        to { stroke-dashoffset: 0; }
+      }
+
+      /* Main + hero */
+      main {
+        flex: 1;
+        display: grid;
+        align-content: center;
+        padding-block: var(--space-12);
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: var(--text-label);
+        font-weight: 500;
+        line-height: 1.3;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-variant-numeric: tabular-nums;
+        color: var(--color-fg-2);
+        margin-bottom: var(--space-4);
+      }
+      h1 {
+        max-width: 20ch;
+        font-size: var(--text-display);
+        font-weight: 600;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        color: var(--color-fg);
+      }
+      .rule {
         width: 2rem;
         height: 3px;
-        margin: 0.75rem auto;
+        margin-block: var(--space-6);
         background: var(--color-accent);
+        transform-origin: left;
       }
-      p { color: var(--color-fg-2); }
+      .lede {
+        max-width: 60ch;
+        font-size: var(--text-base);
+        font-weight: 400;
+        line-height: 1.6;
+        text-wrap: pretty;
+        color: var(--color-fg-2);
+      }
+      .cta-row { margin-top: var(--space-8); }
+
+      /* Button */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        width: 100%;
+        min-height: 48px;
+        padding: 0 var(--space-6);
+        border-radius: var(--radius-sm);
+        font-size: var(--text-base);
+        font-weight: 600;
+        line-height: 1.6;
+        text-decoration: none;
+        transition: background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-out);
+      }
+      .btn--primary {
+        background-color: var(--color-accent);
+        color: var(--color-on-accent);
+      }
+      .btn--primary:active { transform: scale(0.98); }
+
+      /* Footer + link */
+      footer {
+        border-top: 1px solid var(--color-border);
+        padding-block: var(--space-4);
+        font-size: var(--text-sm);
+        line-height: 1.5;
+      }
+      footer .container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-1);
+      }
+      footer p { color: var(--color-fg-2); }
+      .link {
+        position: relative;
+        display: inline-block;
+        padding-block: 11px;
+        color: var(--color-accent);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+      }
+      .link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 10px;
+        height: 1px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--dur-exit) var(--ease-in);
+      }
+      .link:focus-visible::after {
+        transform: scaleX(1);
+        transition: transform var(--dur-enter) var(--ease-out);
+      }
+      .link:active { color: var(--color-accent-hover); }
+
+      @media (hover: hover) {
+        .btn--primary:hover { background-color: var(--color-accent-hover); }
+        .link:hover::after {
+          transform: scaleX(1);
+          transition: transform var(--dur-enter) var(--ease-out);
+        }
+        .brand:hover .mark-diagonal { animation: draw 320ms var(--ease-out); }
+      }
+
+      /* Entrance (load only). No `to` frame: the default style is the final state. */
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(8px); }
+      }
+      @keyframes grow {
+        from { transform: scaleX(0); }
+      }
+      .label { animation: rise var(--dur-reveal) var(--ease-out) backwards; }
+      h1 { animation: rise var(--dur-reveal) var(--ease-out) 60ms backwards; }
+      .rule { animation: grow var(--dur-reveal) var(--ease-out) 300ms backwards; }
+      .lede { animation: rise var(--dur-reveal) var(--ease-out) 180ms backwards; }
+      .cta-row { animation: rise var(--dur-reveal) var(--ease-out) 240ms backwards; }
+
+      @media (min-width: 640px) {
+        .btn { width: auto; }
+        footer { padding-block: var(--space-6); }
+        footer .container {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
+      @media (min-width: 1024px) {
+        main { padding-block: var(--space-24); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0ms !important;
+          transition-duration: 0.01ms !important;
+        }
+        .btn--primary:active { transform: none; }
+      }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Neves Labs</h1>
-      <p>Coming soon</p>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header>
+      <div class="container">
+        <a class="brand" href="/">
+          <svg class="mark" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false">
+            <path d="M8 25V7" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" fill="none" />
+            <path d="M24 25V7" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" fill="none" />
+            <path class="mark-diagonal" pathLength="1" d="M8 7l16 18" stroke="var(--color-accent)" stroke-width="3.5" stroke-linecap="square" fill="none" />
+          </svg>
+          <span>Neves</span> <span class="brand-labs">Labs</span>
+        </a>
+      </div>
+    </header>
+    <main id="main" tabindex="-1">
+      <div class="container">
+        <p class="label">Product studio</p>
+        <h1>We build and ship small, useful software.</h1>
+        <div class="rule" aria-hidden="true"></div>
+        <p class="lede">Neves Labs is an independent studio designing, building, and running its own apps and tools.</p>
+        <div class="cta-row">
+          <a class="btn btn--primary" href="mailto:franklin.neves.filho@gmail.com">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+            Get in touch
+          </a>
+        </div>
+      </div>
     </main>
+    <footer>
+      <div class="container">
+        <p>© 2026 Neves Labs</p>
+        <a class="link" href="mailto:franklin.neves.filho@gmail.com">franklin.neves.filho@gmail.com</a>
+      </div>
+    </footer>
   </body>
 </html>
